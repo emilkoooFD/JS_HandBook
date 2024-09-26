@@ -17,6 +17,7 @@ age--; // age = age - 1
 6. Symbol
 7. BigInt
  */
+str.repeat(n) // повторяет строку n-ное кол-во раз 
 
 
 // Оператор SWITCH
@@ -134,6 +135,13 @@ arr.reverse()
 // Конкатенация массивов
 arr.concat(arr1)
 
+// Получение
+// получить ключ
+Object.keys(arr)
+// получить значение
+Object.values(arr)
+// получить и ключ и значение
+Object.entries(arr)
 
 // Преобразование строки в массив
 const url = 'auth/user/login';
@@ -643,3 +651,674 @@ const options = {
 }
 
 console.log(new Intl.NumberFormat('ru-RU', options).format(23000)) // 23 000,00 Р
+
+
+// Работа с Датой(new Date())
+const now = new Date() // Создание даты(на момент создания)
+
+new Date('01-01-2024') // mm-dd-yyyy
+new Date('01/01/2024')
+new Date('2024/01/01')
+new Date('01 Jan 2024')
+
+new Date(2024, 1, 1)
+new Date(2024, 1, 1 + 100) // прибавить 100 дней к текущей дате
+Date.now() // текущая дата в миллисекундах 
+
+now.getFullYear() // год
+now.getMonth() // месяц
+now.getDate() // дата
+now.getDay() // день недели
+now.getHours() // часы
+now.getMinutes() // минуты
+now.getSeconds() // секунды
+now.getTime() // время в миллисекундах
+
+// Операции с датами
+const date1 = new Date(2024, 10, 18)
+const date2 = new Date(2024, 10, 14)
+Number(date1) // дата в миллисекундах
+Number(date2)
+date2 - date1 // получим разницу в миллисекундах
+(date2 - date1) / (1000 * 60 * 60 * 24) // разницу в датах переводим из миллисекунд в дни
+
+// так же можно сравниват даты
+date1 > date2 // true
+date1 == date2 // false
+date1 === date2 // false
+// решается это через преобразование в миллисекунды(в число)
+Number(date1) === Number(date2) // true
+date1.getTime() === date2.getTime() // true
++date1 === +date2 // true
+
+// Методы вывода без локализации:
+now.toString() // Wed Sep 18 2024 14:52:11 GMT+0300 (Москва, стандартное время)
+now.toDateString() // Wed Sep 18 2024
+now.toTimeString() // 14:53:02 GMT+0300 (Москва, стандартное время)
+
+// Интернационализация дат
+const optionsFirst = {
+    era: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    weekday: 'long',
+    timezone: 'UTC',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric'
+};
+
+new Intl.DateTimeFormat('ru-RU').format(now) // 18.10.2024
+const optionsDate = {
+    hour: 'numeric',
+    minute: 'numeric'
+}
+new Intl.DateTimeFormat('ru-RU', optionsDate).format(now) // 15:10
+const optionsDate2 = {
+    hour: 'numeric',
+    minute: 'numeric',
+    month: 'long'
+}
+new Intl.DateTimeFormat('en-US', optionsDate).format(now) // 3:10 PM
+new Intl.DateTimeFormat('en-US', optionsDate2).format(now) // December at 3:10 PM
+// вместо ru-RU можно просто прописать navigator.language - язык берется у пользователя
+
+
+
+// ТАЙМЕРЫ
+// Функция setTimeout() позволяет отложить выполнение кода на определенный промежуток времени.
+setTimeout(() => {
+    console.log('Boom!')
+}, 2000) // через 2 сек выведет в консоль Boom!
+// 2000 - это через сколько секунд нужно выполнить код(в миллисекундах)
+setTimeout((message) => {
+    console.log(message)
+}, 2000, 'Boom!') // (выведет тоже самое)
+// здесь поработали с аргументом, их может быть несколько, например
+setTimeout((message1, message2) => {
+    console.log(message1, message2)
+}, 2000, 'Boom!', 'Opsss') // вывод: Boom! Opsss
+
+// отмена таймера
+const boomTimer = setTimeout(() => {
+    console.log('Boom!')
+}, 2000)
+clearTimeout(boomTimer) // остановка
+
+
+// setInterval() - позволяет выполнять функции повторно через определенные интервалы времени
+const interval = setInterval(() => {
+    console.log(new Date())
+}, 1000)
+// остановка setInterval
+setTimeout(() => {
+    clearInterval(interval)
+}, 5000) // через 5 сек остановиться setInterval
+
+
+
+// ООП
+// функциональный метод
+const User = function(email, password) {
+    this.email = email;
+    this.password = password;
+}
+
+const user1 = new User('a@a.ru', '123')
+user1 // User {email: 'a@a.ru', password: '123'}
+
+// Prototype
+const Book = function(title, author) {
+    this.title = title;
+    this.author = author;
+    this.isRead = false;
+}
+// чтобы добавить метод, но не для Book, а для других созданных книг на основе Book
+Book.prototype.read() = function() {
+    this.isRead = true;
+}
+
+const lordOfTheRing = new Book('Lord of the ring', 'Tolkien') // Book {title: 'Lord of the ring', author: 'Tolkien', isRead: false}
+lordOfTheRing.read() // Book {title: 'Lord of the ring', author: 'Tolkien', isRead: true}
+
+// Чтобы проверить св-ва которые создали осознанно в начале и те которые добавили в процессе есть метод,
+// возвращает true или false
+lordOfTheRing.hasOwnProperty('read') // false
+lordOfTheRing.hasOwnProperty('author') // true
+
+
+// Class(классы)
+// const Book = function(title, author) {
+//     this.title = title;
+//     this.author = author;
+//     this.isRead = false;
+// }
+// чтобы добавить метод, но не для Book, а для других созданных книг на основе Book
+// Book.prototype.read() = function() {
+//     this.isRead = true;
+// }
+
+// const lordOfTheRing = new Book('Lord of the ring', 'Tolkien')
+
+// Переделаем все это в Class
+class BookClass {
+    isRead = false;
+
+    constructor(title, author) {
+        this.title = title;
+        this.author = author;
+    };
+
+    read() {
+        this.isRead = true;
+    };
+}
+
+const lotr = new BookClass('lotr', 'Tolkien') // BookClass {title: 'lotr', author: 'Tolkien', isRead: false}
+
+// Setters и getters
+class Task {
+    constructor(title, dueDate) {
+        this.title = title,
+        this.dueDate = dueDate
+    }
+
+    get isOverdue() {
+        return this.dueDate < new Date()
+    }
+
+    set dueDate(date) {
+        if (date < new Date()) {
+            return
+        }
+        this._dueDate = date
+    }
+}
+
+const newTask = new Task('Task1', new Date())
+
+console.log(newTask.isOverdue)
+// Дата поменялась
+newTask.dueDate = new Date('2025/01/02') // Task { title: 'Task1', dueTo: 2024-09-20T07:05:06.098Z }
+console.log(newTask)
+
+// Static
+class Test {
+    static a = 1
+    static hello() {
+        console.log('Hello')
+    }
+}
+// Без static мы можем пользоваться методами и св-вами только через создание объекта
+const test = new Test()
+test.hello() // Hello
+//После того как прописали static можем вызвать у самого класса этот метод и св-ва
+Test.hello() // Hello
+Test.a // 1
+
+// Чтобы совершать каку-то логику static {}
+static {
+    let b = 0;
+    a = 5;
+}
+Test.a // "а" уже будет = 5
+
+// Приватные методы и свойства
+class Car {
+    #vin = 5123;
+    speed = 150;
+
+    #changeVin() {
+        console.log('changed')
+    }
+
+    test() {
+        this.#changeVin()
+    }
+}
+const car = new Car()
+car.speed // к speed мы можем обратиться
+car.#vin // а вот к #vin мы не можем обратиться, потому что он приватный
+// приватные методы и св-ва использовать можно только внутри класса
+// но есть нюанс, если приватный метод или св-во засунуть в публичный метод, например
+car.test() // changed
+
+
+// Наследование в ES6
+class BookExtends {
+    constructor(title, author) {
+        this.title = title;
+        this.author = author;
+    }
+    buy() {
+        console.log('Buy')
+    }
+}
+
+// наследуем
+class AudioBook extends BookExtends {
+    constructor(title, author, lenMinutes) {
+        // для активации конструктора родительского класса
+        super(title, author)
+        this.lenMinutes = lenMinutes;
+    }
+    log() {
+        console.log(`${this.title} - ${this.lenMinutes}`)
+    }
+}
+
+// Builder и Chaining
+class Wallet {
+    balance;
+    add(sum) {
+        balance += sum
+        // чтобы работало надо добавить
+        return this
+    }
+    remove(sum) {
+        balance -= sum
+        // чтобы работало надо добавить
+        return this
+    }
+}
+const wallet = new Wallet()
+const resWallet1 = wallet.add(100)
+const resWallet2 = wallet.remove(30)
+const resWallet3 = wallet.remove(50)
+// после добавления return this можно будет писать так
+const resWallet4 = wallet.add(100).remove(30).add(150).add(70) // 150 называется chaining
+
+// Builder
+class Builder {
+    home = {}
+    addRoof(roof) {
+        this.home.roof = roof
+        return this
+    }
+    addTable(table) {
+        this.home.table = table
+        return this
+    }
+    execute() {
+        return this.home
+    }
+}
+const home = new Builder().addRoof('Крыша').addTable('Стол').execute() // { roof: 'Крыша', table: 'Стол' }
+
+
+// SOLID 
+// Solid - описывает принципы дизайна и построения архитектуры в объектно-ориентированном программировании (ООП), 
+// помогая создавать расширяемые и поддерживаемые приложения.
+
+// S - Single Responsibility Principle (Принцип единой ответственности)
+// Класс должен иметь только одну причину для изменения, выполняя одну функцию.
+class Characters {
+    #inventory = [];
+    #health;
+
+    addItem(item) {
+        this.#inventory.push(item)
+    }
+    recieveDamage(damage) {
+        this.#health -= damage
+    }
+
+    // вот это не нужно писать в этот класс, здесь они не нужны
+    // нужно реализовать в другом классе
+    saveCharacter() {
+        localStorage.setItem('char', this)
+    }
+    loadCharacter() {
+        ////....
+    }
+}
+
+// O - Open/Closed Principle (Принцип открытости/закрытости)
+// Классы должны быть открыты для расширения, но закрыты для модификации.
+class Treasure {
+
+}
+
+class Coin extends Treasure {
+
+}
+
+class Crystal extends Treasure {
+
+}
+
+class Inventory {
+    #score;
+    pick(treasure) {
+        if(treasure instanceof Coin) {
+            this.#score += 1
+        }
+        if(treasure instanceof Crystal) {
+            this.#score += 10
+        }
+    }
+}
+
+// а что если я захочу добавить Brilliant,
+// получается что каждый раз мне нужно прописывать if(условие)
+class Brilliant extends Treasure {
+
+}
+
+// поэтому переделаем 
+class Treasure {
+    value = 0;
+}
+
+class Coin extends Treasure {
+    value = 1;
+}
+
+class Crystal extends Treasure {
+    value = 10;
+}
+
+class Brilliant extends Treasure {
+    value = 20;
+}
+
+class Inventory {
+    #score;
+    pick(treasure) {
+        this.#score += treasure.value
+    }
+}
+
+// L - Liskov Substitution Principle (Принцип подстановки Барбара Лисков)
+// Объекты в программе можно заменять их подтипами, не изменяя корректность программы.
+class UserLiskov {
+    #role = 'user';
+    getRole() {
+        return this.#role 
+    }
+}
+
+class Admin extends UserLiskov {
+    #role = ['user', 'admin'];
+    getRole() {
+        // чтобы не было ошибки из-за того что не можем вызвать метод toUpperCase на массив
+        return this.#role.join(', ')
+    }
+}
+
+function logRole(user) {
+    console.log(`Role: ${user.getRole().toUpperCase()}`)
+}
+logRole(new UserLiskov()) // Role: USER
+// Ошибки не будет, потому что предотвратили ее
+logRole(new Admin()) // Role: USER, ADMIN
+
+// I - Interface Segregation Principle (Принцип разделения интерфейса)
+// Не следует вынуждать класс реализовывать интерфейсы и методы, которые он не будет использовать.
+class Weapon {
+    // оружие может бить
+    strike() {
+
+    }
+    // оружие может стрелять
+    shoot() {
+
+    }
+}
+
+class Rifle extends Weapon {
+    strike() {
+        // бить пистолетом не эффективно
+    }
+    
+    shoot() {
+        // стрелять винтовкой хорошо
+    }
+}
+
+class Sword extends Weapon {
+    strike() {
+        // бить мечом хорошо
+    }
+    
+    shoot() {
+        // но стрелять мечом невозможно
+    }
+}
+// вот поэтому надо в общем классе Weapon указывать св-ва и методы только общие, а не все подряд
+// т.е. одному наследованному классу нужен метод shoot(), а другому нет
+
+// D - Dependency Inversion Principle (Принцип инверсии зависимостей)
+// Зависимости внутри системы строятся на основе абстракций, а не деталей. 
+// Высокоуровневые модули не должны зависеть от низкоуровневых.
+class DB {
+    save(items) {
+        console.log(`Saved: ${items}`)
+    }
+}
+
+class MongoDB extends DB {
+    save(items) {
+        console.log(`Saved to Mongo: ${items}`)
+    }
+}
+
+class ToDoList {
+    items = [1, 2, 3]
+    db;
+
+    constructor(db) {
+        this.db = db
+    }
+
+    saveToDB() {
+        this.db.save(this.items)
+    }
+}
+
+const list1 = new ToDoList(new DB())
+list1.saveToDB() // Saved: 1, 2, 3
+const list2 = new ToDoList(new MongoDB)
+list2.saveToDB() // Saved to Mongo: 1, 2, 3
+
+
+// Асинхронный код в JS
+// Асинхронные операции позволяют делегировать выполнение длительных задач (например, таймеры и запросы на сервер) 
+// веб-АПИ, не блокируя главный поток.
+
+// Запросы на сервер
+// AJAX: Asynchronous JavaScript and XML, позволяет браузеру асинхронно отправлять запросы и общаться с сервером.
+
+// Получение данных(старый метод XML)
+const request = new XMLHttpRequest()
+request.open('GET', 'https://dummyjson.com/products/1')
+request.send()
+
+request.addEventListener('load', function() {
+    const data = JSON.parse(this.responseText)
+    console.log(data)
+})
+
+
+// Promises
+// Promises и fetch
+// Promise - это объект, представляющий собой конечный результат асинхронной операции. 
+// Promise может находиться в одном из трех состояний:
+// pending (в ожидании) — начальное состояние, промис ещё не выполнен.
+// fulfilled (выполнено успешно) — асинхронная операция завершилась успешно, промис возвращает результат.
+// rejected (выполнено с ошибкой) — произошла ошибка в процессе выполнения асинхронной операции.
+const resPromise = fetch('https://dummyjson.com/products/1');
+console.log(resPromise) // Promise {<pending>} - грубо говоря обертка
+
+// Цепочка promise
+fetch('https://dummyjson.com/products')
+    .then(response => response.json())
+    .then(({ products }) => {
+        // получили список продуктов
+        console.log(products)
+        // для получения отдельного продукта по цепочке
+        return fetch('https://dummyjson.com/products/' + products[0].id)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data)
+    })
+
+// Обработка reject(catch)
+// Чтобы не делать проверку ошибок на каждой операции есть глобальная обработка ошибок catch
+// в самом конце нужно прописать:
+.then(response => response.json())
+.then(data => {
+    console.log(data)
+}).catch(error => console.log(error)) // вот это
+// и после этого, при возникновении какой-либо ошибки в начале, дальше компиляция кода не пойдет,
+// она остановится на этой ошибке
+
+// Finally()
+// Все то, что будет прописано в finally() будет выведено в конце кода
+// (даже если в начале сработала ошибка и компиляция дальше не пошла)
+then(response => response.json())
+.then(data => {
+    console.log(data)
+}).catch(error => console.log(error))
+.finally(() => {
+    console.log('Finally')
+})
+
+// РУчное создание ошибок
+fetch('https://dummyjson.com/products')
+    .then(response => {
+        if(!response.ok) {
+            throw new Error(`Is Error ${response.status}`)
+        }
+        return response.json()
+    })
+    ///////.......///////
+.catch(error => {
+    const el = document.querySelector('.filter')
+    el.textContent = error.message
+})
+
+
+// Очередность выодов синхроннных и асинхронных кодов
+// Пример
+console.log(1)
+
+setTimeout(() => {
+    console.log(2)
+}, 0)
+
+Promise.resolve(3).then(res => console.log(res))
+
+console.log(4)
+// Первым выведется 1 потом 4, это синхронный код выводится в первую очередь и по очереди
+// 3 выводится Promise, хоть и setTimeout и Promise два асинхронных кода,
+// но у Promise есть приоритет между другими асинхронными кодами
+// ну и 4 выведется 2
+// Итог: 1 4 3 2
+
+
+// Создание простого Promise
+const prom = new Promise((resolve, reject) => {
+    if (new Date < new Date('01/01/2025')) {
+        reject(new Error('Error!!!'))
+    }
+    resolve('Success!')
+})
+
+// в then есть 2 аргумента
+// Первый аргумент метода .then – функция, которая выполняется, когда промис переходит в состояние «выполнен успешно», 
+// и получает результат.
+// Второй аргумент .then – функция, которая выполняется, когда промис переходит в состояние «выполнен с ошибкой», 
+// и получает ошибку.
+
+// использование промиса
+prom
+// вывод resolve
+.then(data => console.log(data))
+// вывод ошибки reject
+.catch(error => console.log(error))
+// создал Promise он имеет 1 аргумент это функция, у этой функции 2 аргумента
+// Вызов resolve(value) завершает промис с успехом.
+// Вызов reject(error) завершает промис с ошибкой и попадание в catch
+
+// TimeOut на promise в функции
+function timeout(sec) {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(1)
+        }, sec * 1000)
+    })
+}
+
+timeout(1)
+    // через 1 секунды выведется в консоль 1
+    .then(() => {
+        console.log(1)
+        // вернем timeout и можем работать с ним дальше
+        return timeout(1)
+    })
+    .then(() => {
+        //выведем в консоль цифру 2 с таймаутом 1 секунда
+        console.log(2)
+        // также возвращаем timeout для дальнейшей работы
+        return timeout(2)
+    })
+    .then(() => {
+        //выведем в консоль цифру 3 с таймаутом 2 секунда
+        console.log(3)
+    })
+// и т.д.
+
+
+// withResolvers
+const { resolve, reject, promise } = Promise.withResolvers()
+
+
+// Современный Асинхронный JS
+// Async await
+function getProducts() {
+    fetch('https://dummyjson.com/products')
+        .then(response => response.json())
+        .then(data => console.log(data))
+}
+// переделаем функцию fetch запроса на async await
+
+async function getProducts() {
+    const productsResponse = await fetch('https://dummyjson.com/products')
+    const { products } = await productsResponse.json()
+    console.log(products)
+}
+// оба будут работать одинаково
+// если нужно сделать еще запрос, просто прописываем в функции еще один fetch запрос
+
+
+// Обработка исключений при асинхронном программировании
+// try {} catch {}
+async function getProducts() {
+    // дословно: try - выполни этот блок кода
+    try {
+        const productsResponse = await fetch('https://dummyjson.com/products')
+        if(!productsResponse.ok) {
+            throw Error(productsResponse.status)
+        }
+        const { products } = await productsResponse.json()
+        console.log(products)
+
+        const productResponse = await fetch('https://dummyjson.com/products/1')
+        if(!productResponse.ok) {
+            throw Error(productResponse.status)
+        }
+        const product = await productResponse.json()
+        console.log(product)
+    // если поймаешь ошибку лови ее здесь(catch)
+    } catch(e) {
+        console.error(e)
+    // также есть finally
+    } finally {
+        console.log('Finally!!!')
+    }
+}
+
+getProducts()
