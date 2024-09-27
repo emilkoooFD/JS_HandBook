@@ -588,3 +588,52 @@ async function getMyCity() {
 }
 
 getMyCity()
+
+/**********************************************************/
+// Цель упражнения: Создать функциональную кнопку на веб-странице, которая генерирует и отображает три случайные идеи для развлечений, используя BoredAPI.
+// Основные задачи:
+// Подготовка интерфейса:
+// Создать кнопку "Сгенерировать идею".
+// Подключить файл стилей (style.css) для настройки внешнего вида элементов на странице.
+// Работа с BoredAPI:
+// Написание функции getActivity(), получающей случайную активность от API.
+// Асинхронное получение данных:
+// Использование async function и await для асинхронных запросов к API.
+// Применение Promise.all() для одновременного получения трех различных активностей.
+// Вывод результатов на страницу:
+// Динамическое создание и добавление карточек с идеями на страницу, используя document.createElement и appendChild.
+// Стилизация:
+// Настройка стилей для кнопки и карточек с идеями, включая параметры flexbox для размещения элементов.
+// Очистка предыдущих результатов:
+// Автоматическое удаление ранее сгенерированных идей при новом запросе, обеспечивая актуальность и разнообразие предложений.
+
+const root = document.querySelector('#root')
+const button = document.createElement('button')
+button.textContent = 'Сгенерировать идею'
+root.append(button)
+button.addEventListener('click', function() {
+    generate()
+})
+
+async function getActivity(id) {
+    const response = await fetch('https://dummyjson.com/products/' + id)
+    return response.json() 
+}
+
+async function generate() {
+    // root.innerHtml = ''
+    try {
+        const data = await Promise.all([
+            getActivity(1),
+            getActivity(2),
+            getActivity(3)
+        ])
+        for (const el of data) {
+            const element = document.createElement('div')
+            element.textContent = el.title
+            root.append(element)
+        }
+    } catch(e) {
+        console.error(e)
+    }
+}

@@ -1322,3 +1322,67 @@ async function getProducts() {
 }
 
 getProducts()
+
+
+// Последовательный запрос данных
+async function getAllProducts() {
+    const response = await fetch('https://dummyjson.com/products');
+    return response.json()
+}
+
+async function getProduct(id) {
+    const response = await fetch('https://dummyjson.com/products/' + id);
+    return response.json()
+}
+
+async function main() {
+    const { products } = await getAllProducts()
+    for (const product of products) {
+        const res = await getProduct(product.id)
+        console.log(res)
+    }
+}
+
+main()
+
+
+// Параллельный запрос
+async function getAllProducts() {
+    const response = await fetch('https://dummyjson.com/products');
+    return response.json()
+}
+
+async function getProduct(id) {
+    const response = await fetch('https://dummyjson.com/products/' + id);
+    return response.json()
+}
+
+async function main() {
+    const res = await Promise.all([
+        getProduct(1),
+        getProduct(2),
+        getProduct(3),
+        getProduct(4),
+        getProduct(5)
+    ])
+    console.log(res)
+}
+
+main()
+
+
+// Пример использования: авторизация пользователя
+async function main() {
+    const res = await fetch('https://dummyjson.com/auth/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            username: 'emilys',
+            password:'emilyspass'
+        })
+    })
+    const data = await res.json()
+    console.log(data)
+}
