@@ -1386,3 +1386,108 @@ async function main() {
     const data = await res.json()
     console.log(data)
 }
+
+// Продвинутый DOM и Events
+// сделать скролл до элемента
+const el = document.createElement('.down')
+const rect = el.getBoundingClientRect()
+
+function generate(event) {
+    window.scrollTo({
+        left: window.scrollX + rect.left,
+        top: window.scrollY + rect.topб,
+        // для плавности скрола
+        behavior: 'smooth'
+    })
+}
+// при нажатии на кнопку будет происходить скролл до указанного элемента
+
+// Типы событий и обработчики
+button.addEventListener('click', function(event) {
+    console.log('Event1')
+})
+button.addEventListener('click', function(event) {
+    console.log('Event2')
+})
+// Удаление слушателя событий
+// аргументу слушателя(функцие) нужно присвоить переменную
+const eventHandler = function(event) {
+    console.log('Event1')
+}
+// прописываем новую фугкцию в слухач
+button.addEventListener('click', eventHandler)
+// и во втором слушателе удаляем первый слушатель
+button.addEventListener('click', function(event) {
+    console.log('Event2')
+    button.removeEventListener('click', eventHandler)
+})
+// обработчиков событий множество, на нажатие клавиатурой, мышкой, левой кнопкой или правой,
+// или просто наведение и т.д.
+
+// ВСПЛЫТИЕ СОБЫТИЙ
+// есть 3 элемента есть {cont, в нем лежит {desc и в desc лежит {button}}}
+const button = document.querySelector('.button')
+const desc = document.querySelector('.desc')
+const cont = document.querySelector('.cont')
+// обработчик события для button
+button.addEventListener('click', function(event) {
+    console.log('Event-button')
+    // выводит от какого элемента был target
+    console.log(event.target)
+    //выводит действительный target
+    console.log(event.currentTarget)
+    this.style.backgroundColor = 'purple'
+})
+// обработчик события для desc
+desc.addEventListener('click', function(event) {
+        console.log('Event-desc')
+        // выводит от какого элемента был target
+        console.log(event.target)
+        //выводит действительный target
+        console.log(event.currentTarget)
+        // остановить событие
+        event.stopPropagation()
+        this.style.backgroundColor = 'blue'
+})
+// обработчик события для cont
+cont.addEventListener('click', function(event) {
+        console.log('Event-cont')
+        // выводит от какого элемента был target
+        console.log(event.target)
+        //выводит действительный target
+        console.log(event.currentTarget)
+        this.style.backgroundColor = 'green'
+})
+
+
+// Делегирование событий
+// Например у нас 100 пользователей и нам нужно чтобы при нажатии на каждого что-то происходило
+const root = document.querySelector('#root')
+
+for (let i = 0; i < 100; i++) {
+    // задаем атрибут data-id и его значение будет индекс(i)
+    const el = document.createElement('div')
+    el.setAttribute('data-id', i)
+    el.innerHTML = `User ${i}`
+    // чтобы не делать обработчик события на каждый элемент(их может быть 1000 или 10000)
+    // не нужно создавать столько обработчиков
+    // el.addEventListener('click', () => {
+    //     console.log(`Deleted user ${i}`)
+    // })
+    root.append(el)
+}
+
+// создаем один обработчик события на родительский элемент
+root.addEventListener('click', (e) => {
+    // получаем их атрибут data-id
+    const i = e.target.getAttribute('data-id')
+    console.log(i)
+})
+
+
+// Перемещение по DOM
+const rootDOM = document.querySelector('#root')
+rootDOM.childNodes // покажет все дочерние элементы
+rootDOM.children // покажет все дочерние элементы
+rootDOM.parentElement // покажет непосредственного родителя
+rootDOM.parentElement // тоже самое
